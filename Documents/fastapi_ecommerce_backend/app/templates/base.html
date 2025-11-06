@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}لوحة التحكم{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        },
+                        secondary: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 font-sans">
+    
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 right-0 z-50 w-64 bg-gradient-to-b from-primary-800 to-primary-900 transform translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
+        <div class="flex items-center justify-center h-20 shadow-md">
+            <h1 class="text-white text-2xl font-bold">
+                <i class="fas fa-shopping-cart ml-2"></i>
+                متجري الإلكتروني
+            </h1>
+        </div>
+        
+        <nav class="mt-10">
+            <a href="/admin/dashboard" class="nav-item flex items-center px-6 py-3 text-white hover:bg-primary-700 transition-colors duration-200 {% if request.url.path == '/admin/dashboard' %}bg-primary-700 border-l-4 border-white{% endif %}">
+                <i class="fas fa-tachometer-alt ml-3"></i>
+                <span>لوحة التحكم</span>
+            </a>
+            
+            <a href="/admin/products" class="nav-item flex items-center px-6 py-3 text-white hover:bg-primary-700 transition-colors duration-200 {% if request.url.path == '/admin/products' %}bg-primary-700 border-l-4 border-white{% endif %}">
+                <i class="fas fa-box ml-3"></i>
+                <span>المنتجات</span>
+            </a>
+            
+            <a href="/admin/orders" class="nav-item flex items-center px-6 py-3 text-white hover:bg-primary-700 transition-colors duration-200 {% if request.url.path == '/admin/orders' %}bg-primary-700 border-l-4 border-white{% endif %}">
+                <i class="fas fa-shopping-bag ml-3"></i>
+                <span>الطلبات</span>
+            </a>
+            
+            <a href="/admin/customers" class="nav-item flex items-center px-6 py-3 text-white hover:bg-primary-700 transition-colors duration-200 {% if request.url.path == '/admin/customers' %}bg-primary-700 border-l-4 border-white{% endif %}">
+                <i class="fas fa-users ml-3"></i>
+                <span>العملاء</span>
+            </a>
+            
+            <a href="/admin/analytics" class="nav-item flex items-center px-6 py-3 text-white hover:bg-primary-700 transition-colors duration-200 {% if request.url.path == '/admin/analytics' %}bg-primary-700 border-l-4 border-white{% endif %}">
+                <i class="fas fa-chart-line ml-3"></i>
+                <span>التحليلات</span>
+            </a>
+            
+            <a href="/admin/settings" class="nav-item flex items-center px-6 py-3 text-white hover:bg-primary-700 transition-colors duration-200 {% if request.url.path == '/admin/settings' %}bg-primary-700 border-l-4 border-white{% endif %}">
+                <i class="fas fa-cog ml-3"></i>
+                <span>الإعدادات</span>
+            </a>
+        </nav>
+        
+        <!-- User Profile -->
+        <div class="absolute bottom-0 w-full p-4">
+            <div class="flex items-center text-white">
+                <img class="w-10 h-10 rounded-full ml-3" src="https://via.placeholder.com/40" alt="Admin">
+                <div>
+                    <p class="text-sm font-medium">المدير</p>
+                    <p class="text-xs text-primary-200">admin@example.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden hidden"></div>
+    
+    <!-- Main Content -->
+    <div class="lg:mr-64">
+        <!-- Top Navigation -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-btn" class="lg:hidden text-gray-500 hover:text-gray-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    
+                    <!-- Page Title -->
+                    <div class="flex-1 lg:flex-none">
+                        <h2 class="text-2xl font-bold text-gray-900">{% block page_title %}لوحة التحكم{% endblock %}</h2>
+                    </div>
+                    
+                    <!-- Top Right Actions -->
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <!-- Notifications -->
+                        <div class="relative">
+                            <button class="text-gray-500 hover:text-gray-600 relative">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Search -->
+                        <div class="hidden md:block">
+                            <div class="relative">
+                                <input type="text" placeholder="بحث..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Dropdown -->
+                        <div class="relative">
+                            <button id="profile-dropdown-btn" class="flex items-center text-gray-700 hover:text-gray-900">
+                                <img class="w-8 h-8 rounded-full ml-2" src="https://via.placeholder.com/32" alt="Profile">
+                                <i class="fas fa-chevron-down text-sm"></i>
+                            </button>
+                            
+                            <div id="profile-dropdown" class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 hidden">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-user ml-2"></i>الملف الشخصي
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-cog ml-2"></i>الإعدادات
+                                </a>
+                                <hr class="my-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-red-700 hover:bg-red-50">
+                                    <i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Page Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    
+    <!-- Success/Error Messages -->
+    <div id="toast-container" class="fixed top-4 left-4 z-50 space-y-2"></div>
+    
+    <!-- Scripts -->
+    <script src="/static/js/main.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

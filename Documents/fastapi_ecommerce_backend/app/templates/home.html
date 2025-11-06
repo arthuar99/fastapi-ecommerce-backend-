@@ -1,0 +1,318 @@
+{% extends "client_base.html" %}
+
+{% block title %}متجرنا الإلكتروني - أفضل المنتجات بأسعار مناسبة{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
+    <div class="container mx-auto px-4 py-20">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="text-center lg:text-right">
+                <h1 class="text-5xl font-bold mb-6">اكتشف عالم التسوق الجديد</h1>
+                <p class="text-xl mb-8 text-primary-100">آلاف المنتجات عالية الجودة بأفضل الأسعار وشحن سريع لجميع أنحاء البلاد</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="/products" class="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        تسوق الآن
+                        <i class="fas fa-arrow-left mr-2"></i>
+                    </a>
+                    <a href="#featured" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
+                        المنتجات المميزة
+                    </a>
+                </div>
+            </div>
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop" alt="Shopping" class="rounded-lg shadow-2xl">
+                <div class="absolute -top-4 -right-4 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full font-bold">
+                    خصم 30%
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center group">
+                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-500 group-hover:text-white transition-all">
+                    <i class="fas fa-shipping-fast text-2xl text-primary-500 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">شحن سريع</h3>
+                <p class="text-gray-600">توصيل سريع خلال 24-48 ساعة لجميع المحافظات</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-500 group-hover:text-white transition-all">
+                    <i class="fas fa-shield-alt text-2xl text-primary-500 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">ضمان الجودة</h3>
+                <p class="text-gray-600">جميع منتجاتنا أصلية مع ضمان شامل</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-500 group-hover:text-white transition-all">
+                    <i class="fas fa-headset text-2xl text-primary-500 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">دعم 24/7</h3>
+                <p class="text-gray-600">فريق دعم متاح على مدار الساعة لخدمتك</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section id="featured" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">المنتجات المميزة</h2>
+            <p class="text-xl text-gray-600">أفضل المنتجات المختارة بعناية لك</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% if featured_products %}
+                {% for product in featured_products %}
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
+                    <div class="relative overflow-hidden">
+                        <img src="{{ product.image_url or 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop' }}" 
+                             alt="{{ product.name }}" 
+                             class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300">
+                        <div class="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
+                            خصم 25%
+                        </div>
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity flex items-center justify-center">
+                            <button class="opacity-0 group-hover:opacity-100 bg-white text-primary-600 px-4 py-2 rounded-lg font-semibold transition-all hover:bg-primary-600 hover:text-white">
+                                عرض سريع
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-semibold text-lg mb-2 text-gray-900">{{ product.name }}</h3>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ product.description or 'وصف المنتج غير متوفر' }}</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span class="text-2xl font-bold text-primary-600">{{ product.price }} ج.م</span>
+                                <span class="text-gray-400 line-through">{{ (product.price * 1.33)|round(2) }} ج.م</span>
+                            </div>
+                            <div class="flex items-center text-yellow-400">
+                                {% for i in range(5) %}
+                                <i class="fas fa-star text-sm"></i>
+                                {% endfor %}
+                                <span class="text-gray-500 text-sm mr-2">(4.8)</span>
+                            </div>
+                        </div>
+                        <button onclick="addToCart({{ product.id }})" class="w-full mt-4 bg-primary-500 text-white py-3 rounded-lg hover:bg-primary-600 transition-colors">
+                            <i class="fas fa-shopping-cart ml-2"></i>
+                            إضافة للسلة
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                {% for i in range(4) %}
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop" 
+                             alt="منتج تجريبي" 
+                             class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300">
+                        <div class="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
+                            خصم 25%
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-semibold text-lg mb-2 text-gray-900">منتج تجريبي {{ i + 1 }}</h3>
+                        <p class="text-gray-600 text-sm mb-4">وصف مختصر للمنتج وأهم مميزاته</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span class="text-2xl font-bold text-primary-600">{{ (299 + i * 50) }} ج.م</span>
+                                <span class="text-gray-400 line-through">{{ (399 + i * 50) }} ج.م</span>
+                            </div>
+                            <div class="flex items-center text-yellow-400">
+                                {% for j in range(5) %}
+                                <i class="fas fa-star text-sm"></i>
+                                {% endfor %}
+                                <span class="text-gray-500 text-sm mr-2">(4.8)</span>
+                            </div>
+                        </div>
+                        <button onclick="addToCart({{ i + 1 }})" class="w-full mt-4 bg-primary-500 text-white py-3 rounded-lg hover:bg-primary-600 transition-colors">
+                            <i class="fas fa-shopping-cart ml-2"></i>
+                            إضافة للسلة
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="/products" class="bg-primary-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-600 transition-colors inline-block">
+                عرض جميع المنتجات
+                <i class="fas fa-arrow-left mr-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Categories -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">تسوق حسب الفئة</h2>
+            <p class="text-xl text-gray-600">اكتشف مجموعتنا المتنوعة من المنتجات</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <a href="/products?category=electronics" class="group">
+                <div class="bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl p-8 text-white text-center hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                    <i class="fas fa-laptop text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold">إلكترونيات</h3>
+                    <p class="text-blue-100 mt-2">أحدث التقنيات</p>
+                </div>
+            </a>
+            
+            <a href="/products?category=clothing" class="group">
+                <div class="bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl p-8 text-white text-center hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                    <i class="fas fa-tshirt text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold">ملابس</h3>
+                    <p class="text-pink-100 mt-2">أحدث الأزياء</p>
+                </div>
+            </a>
+            
+            <a href="/products?category=books" class="group">
+                <div class="bg-gradient-to-br from-green-400 to-green-600 rounded-xl p-8 text-white text-center hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                    <i class="fas fa-book text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold">كتب</h3>
+                    <p class="text-green-100 mt-2">المعرفة والثقافة</p>
+                </div>
+            </a>
+            
+            <a href="/products?category=home" class="group">
+                <div class="bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl p-8 text-white text-center hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                    <i class="fas fa-home text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold">منزل ومطبخ</h3>
+                    <p class="text-purple-100 mt-2">لبيت أجمل</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Special Offers -->
+<section class="py-16 bg-gradient-to-r from-orange-400 to-red-500 text-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center">
+            <h2 class="text-4xl font-bold mb-4">عروض خاصة لفترة محدودة!</h2>
+            <p class="text-xl mb-8 text-orange-100">احصل على خصم يصل إلى 50% على منتجات مختارة</p>
+            
+            <!-- Countdown Timer -->
+            <div class="flex items-center justify-center space-x-4 space-x-reverse mb-8">
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 min-w-[80px]">
+                    <div class="text-2xl font-bold" id="days">02</div>
+                    <div class="text-sm">يوم</div>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 min-w-[80px]">
+                    <div class="text-2xl font-bold" id="hours">15</div>
+                    <div class="text-sm">ساعة</div>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 min-w-[80px]">
+                    <div class="text-2xl font-bold" id="minutes">30</div>
+                    <div class="text-sm">دقيقة</div>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 min-w-[80px]">
+                    <div class="text-2xl font-bold" id="seconds">45</div>
+                    <div class="text-sm">ثانية</div>
+                </div>
+            </div>
+            
+            <a href="/offers" class="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-block">
+                اكتشف العروض الآن
+                <i class="fas fa-fire mr-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="py-16 bg-gray-900 text-white">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">اشترك في نشرتنا الإخبارية</h2>
+        <p class="text-xl text-gray-300 mb-8">احصل على آخر العروض والمنتجات الجديدة</p>
+        
+        <div class="max-w-md mx-auto flex">
+            <input type="email" placeholder="البريد الإلكتروني" class="flex-1 px-4 py-3 rounded-r-lg text-gray-900">
+            <button class="bg-primary-500 text-white px-6 py-3 rounded-l-lg hover:bg-primary-600 transition-colors">
+                اشتراك
+            </button>
+        </div>
+        
+        <p class="text-sm text-gray-400 mt-4">لن نشارك بريدك الإلكتروني مع أطراف أخرى</p>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Countdown timer
+function updateCountdown() {
+    const now = new Date().getTime();
+    const countDownDate = new Date().getTime() + (2 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (30 * 60 * 1000) + (45 * 1000);
+    const distance = countDownDate - now;
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById('days').textContent = days.toString().padStart(2, '0');
+    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+}
+
+// Update countdown every second
+setInterval(updateCountdown, 1000);
+updateCountdown(); // Initial call
+
+// Add to cart function
+function addToCart(productId) {
+    console.log('Adding product', productId, 'to cart');
+    
+    // Show success message
+    showToast('تم إضافة المنتج إلى السلة!', 'success');
+    
+    // Update cart count (simulate)
+    const cartCount = document.getElementById('cartCount');
+    const currentCount = parseInt(cartCount.textContent) || 0;
+    cartCount.textContent = currentCount + 1;
+    
+    // Add animation to cart button
+    const cartBtn = document.getElementById('cartBtn');
+    cartBtn.classList.add('animate-bounce');
+    setTimeout(() => {
+        cartBtn.classList.remove('animate-bounce');
+    }, 1000);
+}
+
+// Toast notification function
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg text-white transform translate-x-full transition-transform duration-300 ${
+        type === 'success' ? 'bg-green-500' : 
+        type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+    }`;
+    toast.textContent = message;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.remove('translate-x-full');
+    }, 100);
+    
+    setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 300);
+    }, 3000);
+}
+</script>
+{% endblock %}

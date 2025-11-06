@@ -29,3 +29,6 @@ def downgrade() -> None:
         op.add_column('orders', sa.Column('user_id', sa.Integer(), nullable=True))
     except:
         pass  # Column might already exist
+
+
+

@@ -1,0 +1,231 @@
+{% extends "client_base.html" %}
+
+{% block title %}{{ product.name }} - متجرنا الإلكتروني{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3 space-x-reverse">
+            <li><a href="/" class="text-gray-700 hover:text-primary-600">الرئيسية</a></li>
+            <li><i class="fas fa-chevron-left text-gray-400 mx-2"></i></li>
+            <li><a href="/products" class="text-gray-700 hover:text-primary-600">المنتجات</a></li>
+            <li><i class="fas fa-chevron-left text-gray-400 mx-2"></i></li>
+            <li class="text-gray-500">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Product Details -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <!-- Product Images -->
+        <div>
+            <div class="relative mb-4">
+                <img id="mainImage" src="{{ product.image_url or 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop' }}" 
+                     alt="{{ product.name }}" 
+                     class="w-full h-96 object-cover rounded-xl shadow-lg">
+                <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full font-bold">
+                    خصم 25%
+                </div>
+            </div>
+            
+            <!-- Thumbnail Images -->
+            <div class="grid grid-cols-4 gap-2">
+                {% for i in range(4) %}
+                <img src="{{ product.image_url or 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150&h=150&fit=crop' }}" 
+                     alt="صورة {{ i + 1 }}" 
+                     class="w-full h-20 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-primary-500 transition-all"
+                     onclick="changeMainImage(this.src)">
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div>
+            <div class="mb-4">
+                <span class="text-primary-600 font-medium text-sm">
+                    {% if product.category == 'electronics' %}إلكترونيات
+                    {% elif product.category == 'clothing' %}ملابس  
+                    {% elif product.category == 'books' %}كتب
+                    {% elif product.category == 'home' %}منزل ومطبخ
+                    {% else %}{{ product.category or 'عام' }}{% endif %}
+                </span>
+            </div>
+            
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+            
+            <!-- Rating -->
+            <div class="flex items-center mb-6">
+                <div class="flex items-center text-yellow-400 ml-2">
+                    {% for i in range(5) %}
+                    <i class="fas fa-star"></i>
+                    {% endfor %}
+                </div>
+                <span class="text-gray-600">(4.8) • 127 تقييم</span>
+            </div>
+            
+            <!-- Price -->
+            <div class="mb-6">
+                <div class="flex items-center space-x-4 space-x-reverse mb-2">
+                    <span class="text-4xl font-bold text-primary-600">{{ product.price }} ج.م</span>
+                    <span class="text-xl text-gray-400 line-through">{{ (product.price * 1.33)|round(2) }} ج.م</span>
+                    <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm font-medium">توفر 25%</span>
+                </div>
+                <p class="text-green-600 font-medium">شحن مجاني للطلبات أكثر من 500 ج.م</p>
+            </div>
+            
+            <!-- Description -->
+            <div class="mb-6">
+                <h3 class="font-semibold text-lg mb-2">وصف المنتج</h3>
+                <p class="text-gray-600 leading-relaxed">{{ product.description or 'منتج عالي الجودة بمواصفات ممتازة ومناسب لجميع الاستخدامات. يتميز بالمتانة والأداء العالي.' }}</p>
+            </div>
+            
+            <!-- Stock Status -->
+            <div class="mb-6">
+                {% if product.stock > 10 %}
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                    <i class="fas fa-check-circle ml-1"></i>متوفر في المخزون
+                </span>
+                {% elif product.stock > 0 %}
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                    <i class="fas fa-exclamation-triangle ml-1"></i>كمية محدودة ({{ product.stock }} قطع متبقية)
+                </span>
+                {% else %}
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                    <i class="fas fa-times-circle ml-1"></i>نفد من المخزون
+                </span>
+                {% endif %}
+            </div>
+            
+            <!-- Quantity and Add to Cart -->
+            <div class="mb-8">
+                <div class="flex items-center space-x-4 space-x-reverse mb-4">
+                    <label class="font-medium text-gray-700">الكمية:</label>
+                    <div class="flex items-center border border-gray-300 rounded-lg">
+                        <button onclick="decreaseQuantity()" class="px-3 py-2 hover:bg-gray-100">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" id="quantity" value="1" min="1" max="{{ product.stock }}" 
+                               class="w-16 text-center border-0 focus:outline-none">
+                        <button onclick="increaseQuantity()" class="px-3 py-2 hover:bg-gray-100">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="addProductToCart()" 
+                            class="flex-1 bg-primary-500 text-white py-4 px-6 rounded-lg font-semibold hover:bg-primary-600 transition-colors {% if product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}"
+                            {% if product.stock == 0 %}disabled{% endif %}>
+                        <i class="fas fa-shopping-cart ml-2"></i>
+                        إضافة إلى السلة
+                    </button>
+                    <button onclick="buyNow()" 
+                            class="flex-1 bg-green-500 text-white py-4 px-6 rounded-lg font-semibold hover:bg-green-600 transition-colors {% if product.stock == 0 %}opacity-50 cursor-not-allowed{% endif %}"
+                            {% if product.stock == 0 %}disabled{% endif %}>
+                        <i class="fas fa-bolt ml-2"></i>
+                        اشتر الآن
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Features -->
+            <div class="border-t pt-6">
+                <h3 class="font-semibold text-lg mb-4">المميزات</h3>
+                <ul class="space-y-2">
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 ml-2"></i>
+                        ضمان لمدة عام كامل
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 ml-2"></i>
+                        شحن مجاني لجميع أنحاء البلاد
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 ml-2"></i>
+                        إمكانية الإرجاع خلال 30 يوم
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <i class="fas fa-check text-green-500 ml-2"></i>
+                        دعم فني متخصص
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">منتجات ذات صلة</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for product in related_products %}
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
+                <div class="relative overflow-hidden">
+                    <img src="{{ product.image_url or 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop' }}" 
+                         alt="{{ product.name }}" 
+                         class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300">
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold mb-2">{{ product.name }}</h3>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xl font-bold text-primary-600">{{ product.price }} ج.م</span>
+                        <button onclick="addToCart({{ product.id }}, '{{ product.name }}', {{ product.price }})" 
+                                class="bg-primary-500 text-white px-3 py-1 rounded hover:bg-primary-600">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function changeMainImage(src) {
+    document.getElementById('mainImage').src = src;
+}
+
+function increaseQuantity() {
+    const quantityInput = document.getElementById('quantity');
+    const currentValue = parseInt(quantityInput.value);
+    const maxValue = parseInt(quantityInput.max);
+    
+    if (currentValue < maxValue) {
+        quantityInput.value = currentValue + 1;
+    }
+}
+
+function decreaseQuantity() {
+    const quantityInput = document.getElementById('quantity');
+    const currentValue = parseInt(quantityInput.value);
+    
+    if (currentValue > 1) {
+        quantityInput.value = currentValue - 1;
+    }
+}
+
+function addProductToCart() {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const productId = {{ product.id }};
+    const productName = '{{ product.name }}';
+    const productPrice = {{ product.price }};
+    const productImage = '{{ product.image_url or "" }}';
+    
+    for (let i = 0; i < quantity; i++) {
+        addToCart(productId, productName, productPrice, productImage);
+    }
+}
+
+function buyNow() {
+    addProductToCart();
+    setTimeout(() => {
+        window.location.href = '/checkout';
+    }, 500);
+}
+</script>
+{% endblock %}
